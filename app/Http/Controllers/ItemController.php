@@ -10,12 +10,12 @@ use App\Http\Resources\ItemCollection;
 
 class ItemController extends Controller
 {
-    public function itemsOfUser(){
-        return new ItemCollection(Item::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->paginate());
+    public function items(){
+        return new ItemCollection(Item::orderBy('id', 'DESC')->paginate());
     }
 
     public function item($id){
-        $item = Item::where('user_id', auth()->user()->id)->where('id', $id)->firstOrFail();
+        $item = Item::findOrFail($id);
         return new ItemResource($item);
     }
 

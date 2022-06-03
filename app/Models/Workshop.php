@@ -28,4 +28,8 @@ class Workshop extends Model
     public function comments(){
         return $this->morphMany(Comment::class, 'commentable');
     }
+    
+    public function photos(){
+        return $this->morphMany(Photo::class, 'photable');
+    }
 }

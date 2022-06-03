@@ -11,16 +11,16 @@ use App\Http\Requests\CreateWorkshopRequest;
 
 class WorkshopController extends Controller
 {
-    public function workshopsOfUser(){
-        return new WorkshopCollection(Workshop::where('user_id', auth()->user()->id)->orderBy('id', 'DESC')->paginate());
+    public function workshops(Request $request){
+        return new WorkshopCollection(Workshop::orderBy('id', 'DESC')->paginate());
     }
 
     public function workshop($id){
-        return new WorkshopResource(Workshop::where('user_id', auth()->user()->id)->where('id', $id)->firstOrFail());
+        return new WorkshopResource(Workshop::findOrFail($id));
     }
 
     public function workshopItems($id){
-        return ItemResource::collection( Workshop::where('user_id', auth()->user()->id)->where('id', $id)->firstOrFail()->items );
+        return ItemResource::collection( Workshop::findOrFail($id)->items );
     }
 
     public function create(CreateWorkshopRequest $request){
@@ -31,6 +31,8 @@ class WorkshopController extends Controller
         $workshop->city_id = $request->city_id;
         $workshop->user_id = auth()->user()->id;
         $workshop->save();
+
+        // if($request->hasFile)
         
         return response(['msg'=>'Created.', 'data'=>new WorkshopResource($workshop)]);
     }
